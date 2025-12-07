@@ -18,6 +18,11 @@ export const MOCK_CRM_DATA: CRMEntry[] = [
     work: ["branding", "marketing"],
     leadSources: ["Google Business"],
     driveLink: "https://drive.google.com/drive/folders/sample-project-id",
+    socials: {
+        website: "https://stmarysrubbers.com",
+        linkedin: "https://linkedin.com/company/smr-rubbers",
+        instagram: "https://instagram.com/smrrubbers"
+    },
     lastUpdatedBy: "Vallapata",
     lastUpdatedAt: "2023-10-26T10:00:00Z"
   },
@@ -36,6 +41,10 @@ export const MOCK_CRM_DATA: CRMEntry[] = [
     tags: ["New"],
     work: ["development"],
     leadSources: ["Referral"],
+    socials: {
+        website: "https://techflow.io",
+        linkedin: "https://linkedin.com/company/techflow"
+    },
     lastUpdatedBy: "John Doe",
     lastUpdatedAt: "2023-10-21T14:30:00Z"
   },
@@ -90,6 +99,10 @@ export const MOCK_CRM_DATA: CRMEntry[] = [
     tags: ["Hot"],
     work: ["software"],
     leadSources: ["Website"],
+    socials: {
+        website: "https://alphalog.com",
+        facebook: "https://facebook.com/alphalog"
+    },
     lastUpdatedBy: "Vallapata",
     lastUpdatedAt: "2023-10-29T16:45:00Z"
   }
