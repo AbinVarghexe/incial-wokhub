@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { X, Hash, User, Calendar, Tag, Clock } from 'lucide-react';
+import { X, Hash, User, Calendar, Tag, Clock, ExternalLink, HardDrive } from 'lucide-react';
 import { Company } from '../../types';
 import { getCompanyStatusStyles, getWorkTypeStyles, formatDate } from '../../utils';
 
@@ -73,6 +73,24 @@ export const CompanyDetailsModal: React.FC<CompanyDetailsModalProps> = ({ isOpen
                     )}
                 </div>
             </div>
+
+            {/* Project Resources - Drive Link */}
+            {company.driveLink && (
+                <div className="p-4 bg-blue-50/50 rounded-xl border border-blue-100">
+                     <h3 className="text-xs font-bold text-blue-800 uppercase tracking-wide mb-3 flex items-center gap-2">
+                        <HardDrive className="h-4 w-4" /> Project Resources
+                    </h3>
+                    <a 
+                        href={company.driveLink} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-2 text-sm font-semibold text-blue-600 hover:text-blue-800 transition-colors group"
+                    >
+                        Access Project Assets
+                        <ExternalLink className="h-3.5 w-3.5 opacity-50 group-hover:opacity-100 transition-opacity" />
+                    </a>
+                </div>
+            )}
 
             {/* Timestamps */}
             <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-100">

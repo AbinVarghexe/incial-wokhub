@@ -53,7 +53,8 @@ export const CompaniesPage: React.FC = () => {
           createdAt: entry.lastContact,
           updatedAt: entry.lastUpdatedAt || new Date().toISOString(),
           lastUpdatedBy: entry.lastUpdatedBy,
-          lastUpdatedAt: entry.lastUpdatedAt
+          lastUpdatedAt: entry.lastUpdatedAt,
+          driveLink: entry.driveLink // Map Drive Link
           // Use properties from CRM that map to Company interface
       } as Company));
   }, [crmEntries]);
