@@ -41,9 +41,10 @@ export interface CRMEntry {
   work: string[];
   leadSources: string[];
   driveLink?: string; 
-  socials?: SocialLinks; // New field
+  socials?: SocialLinks;
   lastUpdatedBy?: string;
   lastUpdatedAt?: string;
+  referenceId?: string; // Added for Company view compatibility
 }
 
 export interface FilterState {
@@ -54,26 +55,7 @@ export interface FilterState {
   dateRangeEnd: string;
 }
 
-// --- COMPANIES MODULE TYPES ---
-
-export type CompanyStatus = 'running' | 'not_started' | 'discontinued' | 'completed' | CRMStatus;
-
-export interface Company {
-  id: number;
-  referenceId: string;
-  name: string;
-  contactPerson?: string; 
-  work: string[];
-  status: CompanyStatus;
-  createdAt: string;
-  updatedAt: string;
-  lastUpdatedBy?: string;
-  lastUpdatedAt?: string;
-  driveLink?: string;
-  socials?: SocialLinks; // New field
-  isCrmDerived?: boolean; 
-}
-
+// Re-using CRM Entry for Company Views
 export interface CompanyFilterState {
   search: string;
   status: string;

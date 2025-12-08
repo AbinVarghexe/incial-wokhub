@@ -1,5 +1,5 @@
 
-import { CRMEntry, Company, Task } from '../types';
+import { CRMEntry, Task } from '../types';
 
 export const MOCK_CRM_DATA: CRMEntry[] = [
   {
@@ -25,7 +25,8 @@ export const MOCK_CRM_DATA: CRMEntry[] = [
         twitter: "https://twitter.com/smrrubbers"
     },
     lastUpdatedBy: "Vallapata",
-    lastUpdatedAt: "2023-10-26T10:00:00Z"
+    lastUpdatedAt: "2023-10-26T10:00:00Z",
+    referenceId: "REF-2023-001"
   },
   {
     id: 2,
@@ -71,7 +72,8 @@ export const MOCK_CRM_DATA: CRMEntry[] = [
         facebook: "https://facebook.com/greenearth"
     },
     lastUpdatedBy: "Vallapata",
-    lastUpdatedAt: "2023-10-29T09:15:00Z"
+    lastUpdatedAt: "2023-10-29T09:15:00Z",
+    referenceId: "REF-2023-003"
   },
   {
     id: 4,
@@ -112,7 +114,8 @@ export const MOCK_CRM_DATA: CRMEntry[] = [
         linkedin: "https://linkedin.com/company/alphalogistics"
     },
     lastUpdatedBy: "Vallapata",
-    lastUpdatedAt: "2023-10-29T16:45:00Z"
+    lastUpdatedAt: "2023-10-29T16:45:00Z",
+    referenceId: "REF-2023-005"
   },
   {
     id: 6,
@@ -136,7 +139,8 @@ export const MOCK_CRM_DATA: CRMEntry[] = [
         other: "https://behance.net/quantum-concepts"
     },
     lastUpdatedBy: "Vallapata",
-    lastUpdatedAt: "2023-11-06T09:30:00Z"
+    lastUpdatedAt: "2023-11-06T09:30:00Z",
+    referenceId: "REF-2023-006"
   },
   {
     id: 7,
@@ -200,7 +204,8 @@ export const MOCK_CRM_DATA: CRMEntry[] = [
         facebook: "https://facebook.com/apexconstruction"
     },
     lastUpdatedBy: "Vallapata",
-    lastUpdatedAt: "2023-10-01T16:00:00Z"
+    lastUpdatedAt: "2023-10-01T16:00:00Z",
+    referenceId: "REF-2023-009"
   },
   {
     id: 10,
@@ -223,71 +228,8 @@ export const MOCK_CRM_DATA: CRMEntry[] = [
         twitter: "https://twitter.com/pixelperfect"
     },
     lastUpdatedBy: "Vallapata",
-    lastUpdatedAt: "2023-11-08T13:45:00Z"
-  }
-];
-
-// Fallback data if CRM -> Company derivation fails or for direct testing
-export const MOCK_COMPANIES_DATA: Company[] = [
-  {
-    id: 1,
-    referenceId: "REF-2024-001",
-    name: "Acme Innovations",
-    work: ["Marketing", "Branding"],
-    status: "running",
-    createdAt: "2023-01-15T10:00:00Z",
-    updatedAt: "2023-10-01T14:00:00Z",
-    lastUpdatedBy: "Demo User",
-    lastUpdatedAt: "2023-10-01T14:00:00Z",
-    socials: {
-        website: "https://acmeinno.com",
-        twitter: "https://twitter.com/acme"
-    }
-  },
-  {
-    id: 2,
-    referenceId: "REF-2024-002",
-    name: "CyberDyne Systems",
-    work: ["UI/UX", "Website"],
-    status: "not_started",
-    createdAt: "2023-02-20T09:30:00Z",
-    updatedAt: "2023-02-20T09:30:00Z",
-    lastUpdatedBy: "John Doe",
-    lastUpdatedAt: "2023-02-20T09:30:00Z",
-    driveLink: "https://drive.google.com/cyberdyne"
-  },
-  {
-    id: 3,
-    referenceId: "REF-2024-003",
-    name: "Globex Corporation",
-    work: ["Video", "VFX"],
-    status: "completed",
-    createdAt: "2022-11-05T16:20:00Z",
-    updatedAt: "2023-09-15T11:45:00Z",
-    lastUpdatedBy: "Vallapata",
-    lastUpdatedAt: "2023-09-15T11:45:00Z"
-  },
-  {
-    id: 4,
-    referenceId: "REF-2024-004",
-    name: "Soylent Corp",
-    work: ["Ads", "Poster"],
-    status: "discontinued",
-    createdAt: "2023-05-12T08:00:00Z",
-    updatedAt: "2023-06-01T10:00:00Z",
-    lastUpdatedBy: "Vallapata",
-    lastUpdatedAt: "2023-06-01T10:00:00Z"
-  },
-  {
-    id: 5,
-    referenceId: "REF-2024-005",
-    name: "Massive Dynamic",
-    work: ["LinkedIn", "Marketing"],
-    status: "running",
-    createdAt: "2023-08-10T13:15:00Z",
-    updatedAt: "2023-10-25T09:00:00Z",
-    lastUpdatedBy: "Demo User",
-    lastUpdatedAt: "2023-10-25T09:00:00Z"
+    lastUpdatedAt: "2023-11-08T13:45:00Z",
+    referenceId: "REF-2023-010"
   }
 ];
 
