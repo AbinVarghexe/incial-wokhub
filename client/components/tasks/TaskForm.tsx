@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { X, Save, Calendar, User, AlignLeft, Flag, CheckCircle, History, Link as LinkIcon, ExternalLink, Edit2, Clock, Building } from 'lucide-react';
+import { X, Save, Calendar, User, AlignLeft, Flag, CheckCircle, History, Link as LinkIcon, ExternalLink, Edit2, Clock, Building, Maximize2, Minimize2 } from 'lucide-react';
 import { Task, TaskPriority, TaskStatus } from '../../types';
 import { CustomDatePicker } from '../ui/CustomDatePicker';
 import { formatDate } from '../../utils';
@@ -20,6 +20,7 @@ const ASSIGNEES = ['Vallapata', 'John Doe', 'Demo User', 'Admin User', 'Employee
 export const TaskForm: React.FC<TaskFormProps> = ({ isOpen, onClose, onSubmit, initialData, companyMap }) => {
   const [formData, setFormData] = useState<Partial<Task>>({});
   const [mode, setMode] = useState<'view' | 'edit'>('view');
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
 
   useEffect(() => {
     if (isOpen) {
@@ -137,9 +138,18 @@ export const TaskForm: React.FC<TaskFormProps> = ({ isOpen, onClose, onSubmit, i
 
           {/* Description */}
           <div>
-              <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide mb-3 flex items-center gap-2">
-                  <AlignLeft className="h-4 w-4 text-gray-400" /> Description
-              </h3>
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="text-sm font-bold text-gray-900 uppercase tracking-wide flex items-center gap-2">
+                    <AlignLeft className="h-4 w-4 text-gray-400" /> Description
+                </h3>
+                <button 
+                    type="button" 
+                    onClick={() => setIsDescriptionExpanded(true)}
+                    className="text-xs font-medium text-brand-600 hover:text-brand-700 flex items-center gap-1 hover:bg-brand-50 px-2 py-1 rounded transition-colors"
+                >
+                    <Maximize2 className="h-3 w-3" /> Expand
+                </button>
+              </div>
               <div className="bg-white p-4 rounded-xl border border-gray-200 text-gray-700 text-sm leading-relaxed whitespace-pre-wrap min-h-[100px] shadow-sm">
                   {formData.description || <span className="text-gray-400 italic">No description provided.</span>}
               </div>
@@ -253,9 +263,18 @@ export const TaskForm: React.FC<TaskFormProps> = ({ isOpen, onClose, onSubmit, i
 
             {/* Description */}
             <div>
-                 <label className="flex items-center gap-2 text-sm text-gray-500 mb-2">
-                    <AlignLeft className="h-4 w-4" /> Description
-                 </label>
+                 <div className="flex items-center justify-between mb-2">
+                     <label className="flex items-center gap-2 text-sm text-gray-500">
+                        <AlignLeft className="h-4 w-4" /> Description
+                     </label>
+                     <button 
+                        type="button" 
+                        onClick={() => setIsDescriptionExpanded(true)}
+                        className="text-xs font-medium text-brand-600 hover:text-brand-700 flex items-center gap-1 hover:bg-brand-50 px-2 py-1 rounded transition-colors"
+                    >
+                        <Maximize2 className="h-3 w-3" /> Expand Editor
+                    </button>
+                 </div>
                  <textarea 
                     className="w-full bg-white border border-gray-200 rounded-xl p-4 text-sm text-gray-700 focus:ring-2 focus:ring-brand-500 focus:outline-none h-32 resize-none shadow-sm"
                     placeholder="Add more details about this task..."
@@ -277,33 +296,71 @@ export const TaskForm: React.FC<TaskFormProps> = ({ isOpen, onClose, onSubmit, i
   );
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 transition-all animate-in fade-in duration-200">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col transform transition-all scale-100">
-        
-        {/* Modal Top Bar */}
-        <div className="flex items-center justify-between p-5 border-b border-gray-100">
-          <h2 className="text-lg font-bold text-gray-500">
-            {mode === 'view' ? 'Task Details' : (initialData ? 'Edit Task' : 'New Task')}
-          </h2>
-          <div className="flex items-center gap-2">
-            {mode === 'view' && (
-                <button 
-                    onClick={() => setMode('edit')}
-                    className="p-2 text-brand-600 hover:bg-brand-50 rounded-lg transition-colors flex items-center gap-2 text-sm font-semibold"
-                >
-                    <Edit2 className="h-4 w-4" /> Edit
-                </button>
-            )}
-            <button onClick={onClose} className="p-2 text-gray-400 hover:bg-gray-100 rounded-full transition-colors">
-                <X className="h-5 w-5" />
-            </button>
-          </div>
-        </div>
+    <>
+        {/* Expanded Description Overlay */}
+        {isDescriptionExpanded && (
+            <div className="fixed inset-0 z-[60] bg-white flex flex-col animate-in fade-in duration-200">
+                <div className="flex items-center justify-between p-4 border-b border-gray-100 bg-gray-50">
+                    <h3 className="text-lg font-bold text-gray-800 flex items-center gap-2">
+                        <AlignLeft className="h-5 w-5 text-gray-500" /> 
+                        Description {mode === 'edit' ? '(Editing)' : ''}
+                    </h3>
+                    <div className="flex items-center gap-2">
+                        <button 
+                            type="button"
+                            onClick={() => setIsDescriptionExpanded(false)}
+                            className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-lg flex items-center gap-2 text-sm font-semibold transition-colors"
+                        >
+                            <Minimize2 className="h-4 w-4" /> Done
+                        </button>
+                    </div>
+                </div>
+                <div className="flex-1 p-6 overflow-y-auto max-w-5xl mx-auto w-full">
+                    {mode === 'edit' ? (
+                        <textarea 
+                            className="w-full h-full p-4 text-base text-gray-800 bg-transparent border-none focus:ring-0 resize-none outline-none leading-relaxed"
+                            placeholder="Type your detailed description here..."
+                            value={formData.description || ''}
+                            onChange={e => setFormData({...formData, description: e.target.value})}
+                            autoFocus
+                        />
+                    ) : (
+                        <div className="prose prose-lg max-w-none text-gray-800 whitespace-pre-wrap leading-relaxed">
+                            {formData.description || <span className="text-gray-400 italic">No description provided.</span>}
+                        </div>
+                    )}
+                </div>
+            </div>
+        )}
 
-        <div className="overflow-y-auto p-6 custom-scrollbar">
-            {mode === 'view' ? renderView() : renderEdit()}
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4 transition-all animate-in fade-in duration-200">
+        <div className="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-hidden flex flex-col transform transition-all scale-100">
+            
+            {/* Modal Top Bar */}
+            <div className="flex items-center justify-between p-5 border-b border-gray-100">
+            <h2 className="text-lg font-bold text-gray-500">
+                {mode === 'view' ? 'Task Details' : (initialData ? 'Edit Task' : 'New Task')}
+            </h2>
+            <div className="flex items-center gap-2">
+                {mode === 'view' && (
+                    <button 
+                        onClick={() => setMode('edit')}
+                        className="p-2 text-brand-600 hover:bg-brand-50 rounded-lg transition-colors flex items-center gap-2 text-sm font-semibold"
+                    >
+                        <Edit2 className="h-4 w-4" /> Edit
+                    </button>
+                )}
+                <button onClick={onClose} className="p-2 text-gray-400 hover:bg-gray-100 rounded-full transition-colors">
+                    <X className="h-5 w-5" />
+                </button>
+            </div>
+            </div>
+
+            <div className="overflow-y-auto p-6 custom-scrollbar">
+                {mode === 'view' ? renderView() : renderEdit()}
+            </div>
         </div>
-      </div>
-    </div>
+        </div>
+    </>
   );
 };
