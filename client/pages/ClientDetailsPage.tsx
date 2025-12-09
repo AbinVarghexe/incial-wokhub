@@ -142,6 +142,16 @@ export const ClientDetailsPage: React.FC = () => {
       localStorage.setItem('mock_tasks_data', JSON.stringify(updatedAll));
   };
 
+  const handleToggleVisibility = async (task: Task) => {
+      const updated = { ...task, isVisibleOnMainBoard: !task.isVisibleOnMainBoard };
+      setTasks(prev => prev.map(t => t.id === task.id ? updated : t));
+      
+      await tasksApi.update(task.id, { isVisibleOnMainBoard: !task.isVisibleOnMainBoard });
+      const allTasks = await tasksApi.getAll();
+      const updatedAll = allTasks.map(t => t.id === task.id ? updated : t);
+      localStorage.setItem('mock_tasks_data', JSON.stringify(updatedAll));
+  };
+
   if (isLoading) return <div className="flex h-screen items-center justify-center bg-[#F8FAFC]">Loading...</div>;
   if (!client) return <div className="flex h-screen items-center justify-center bg-[#F8FAFC]">Client not found</div>;
 
@@ -247,6 +257,7 @@ export const ClientDetailsPage: React.FC = () => {
                                 onEdit={handleEdit} 
                                 onDelete={(id) => setDeleteId(id)} 
                                 onStatusChange={handleStatusChange}
+                                onToggleVisibility={handleToggleVisibility}
                             />
 
                             {/* Completed Section */}
@@ -270,6 +281,7 @@ export const ClientDetailsPage: React.FC = () => {
                                                 onEdit={handleEdit} 
                                                 onDelete={(id) => setDeleteId(id)} 
                                                 onStatusChange={handleStatusChange}
+                                                onToggleVisibility={handleToggleVisibility}
                                             />
                                         </div>
                                     )}
