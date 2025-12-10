@@ -29,13 +29,17 @@ export const TaskForm: React.FC<TaskFormProps> = ({ isOpen, onClose, onSubmit, i
         setFormData(initialData);
         setMode('view');
       } else {
+        // Use local time for default date
+        const today = new Date();
+        const localIsoDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+        
         setFormData({
           title: '',
           description: '',
           status: 'Not Started',
           priority: 'Medium',
           assignedTo: 'Unassigned',
-          dueDate: new Date().toISOString().split('T')[0],
+          dueDate: localIsoDate,
           taskLink: ''
         });
         setMode('edit');

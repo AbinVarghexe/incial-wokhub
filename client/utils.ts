@@ -1,6 +1,4 @@
 
-
-
 export const formatMoney = (amount: number) => {
   return new Intl.NumberFormat('en-IN', {
     style: 'currency',
@@ -11,6 +9,14 @@ export const formatMoney = (amount: number) => {
 
 export const formatDate = (dateString: string) => {
   if (!dateString) return '-';
+  
+  // Check for YYYY-MM-DD format to parse as local date
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+      const [y, m, d] = dateString.split('-').map(Number);
+      const date = new Date(y, m - 1, d); // Local midnight
+      return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(date);
+  }
+
   const date = new Date(dateString);
   return new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' }).format(date);
 };
@@ -34,7 +40,14 @@ export const getFollowUpColor = (dateString: string) => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   
-  const checkDate = new Date(dateString);
+  // Parse as local if strict date string
+  let checkDate: Date;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateString)) {
+      const [y, m, d] = dateString.split('-').map(Number);
+      checkDate = new Date(y, m - 1, d);
+  } else {
+      checkDate = new Date(dateString);
+  }
   checkDate.setHours(0, 0, 0, 0);
 
   if (checkDate < today) return 'text-red-600 font-semibold';

@@ -28,6 +28,10 @@ export const ClientTaskForm: React.FC<ClientTaskFormProps> = ({ isOpen, onClose,
         setFormData(initialData);
         setMode('view');
       } else {
+        // Use local time for default date
+        const today = new Date();
+        const localIsoDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
         setFormData({
           companyId,
           title: '',
@@ -36,7 +40,7 @@ export const ClientTaskForm: React.FC<ClientTaskFormProps> = ({ isOpen, onClose,
           priority: 'Medium',
           taskType: 'General',
           assignedTo: 'Vallapata',
-          dueDate: new Date().toISOString().split('T')[0],
+          dueDate: localIsoDate,
           taskLink: '',
           isVisibleOnMainBoard: false // Default to false
         });

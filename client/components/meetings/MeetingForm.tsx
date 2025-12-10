@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Save, Calendar, Clock, Link as LinkIcon, FileText, CheckCircle, AlignLeft, Video, Maximize2, Minimize2 } from 'lucide-react';
 import { Meeting, MeetingStatus } from '../../types';
+import { CustomSelect } from '../ui/CustomSelect';
 
 interface MeetingFormProps {
   isOpen: boolean;
@@ -21,12 +22,20 @@ export const MeetingForm: React.FC<MeetingFormProps> = ({ isOpen, onClose, onSub
       if (initialData) {
         setFormData(initialData);
       } else {
-        // Create Mode defaults
+        // Create Mode defaults: Local Time for datetime-local input
         const now = new Date();
-        now.setMinutes(now.getMinutes() - now.getTimezoneOffset()); // Local time adj
+        // Construct YYYY-MM-DDThh:mm manually to avoid timezone shift from toISOString
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        
+        const localDateTimeStr = `${year}-${month}-${day}T${hours}:${minutes}`;
+
         setFormData({
           title: '',
-          dateTime: now.toISOString().slice(0, 16), // Format for datetime-local
+          dateTime: localDateTimeStr, 
           status: 'Scheduled',
           meetingLink: '',
           notes: ''
@@ -124,16 +133,12 @@ export const MeetingForm: React.FC<MeetingFormProps> = ({ isOpen, onClose, onSub
 
                       {/* Status */}
                       <div>
-                          <label className="block text-xs font-bold text-gray-500 uppercase tracking-wide mb-1.5 flex items-center gap-1.5">
-                              <CheckCircle className="h-3.5 w-3.5" /> Status
-                          </label>
-                          <select 
-                              className="w-full bg-gray-50 border border-gray-200 rounded-xl p-2.5 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none"
-                              value={formData.status}
-                              onChange={e => setFormData({...formData, status: e.target.value as MeetingStatus})}
-                          >
-                              {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
-                          </select>
+                          <CustomSelect 
+                              label="Status"
+                              value={formData.status || 'Scheduled'}
+                              onChange={(val) => setFormData({...formData, status: val as MeetingStatus})}
+                              options={STATUSES.map(s => ({ label: s, value: s }))}
+                          />
                       </div>
                   </div>
 
@@ -146,7 +151,7 @@ export const MeetingForm: React.FC<MeetingFormProps> = ({ isOpen, onClose, onSub
                           <Video className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
                           <input 
                               type="text"
-                              className="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none placeholder-gray-400"
+                              className="w-full pl-9 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none placeholder-gray-400"
                               placeholder="Zoom / Google Meet URL"
                               value={formData.meetingLink || ''}
                               onChange={e => setFormData({...formData, meetingLink: e.target.value})}
