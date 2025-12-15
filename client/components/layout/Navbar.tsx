@@ -124,15 +124,25 @@ export const Navbar: React.FC = () => {
         
         {/* Quick Action (Desktop) */}
         {!isClient && (
-            <Link 
-                to="/tasks"
-                className="hidden sm:flex items-center gap-2 px-3.5 py-2 bg-brand-50 hover:bg-brand-100 text-brand-700 border border-brand-200/50 rounded-xl transition-all active:scale-95 group"
-            >
-                <div className="bg-white rounded-md p-0.5 shadow-sm group-hover:shadow text-brand-600">
-                    <Plus className="h-3.5 w-3.5" />
-                </div>
-                <span className="text-xs font-bold uppercase tracking-wide">New</span>
-            </Link>
+            <div className="hidden sm:flex items-center gap-3">
+                <Link 
+                    to="/tasks"
+                    className="flex items-center gap-2 px-3.5 py-2 bg-brand-50 hover:bg-brand-100 text-brand-700 border border-brand-200/50 rounded-xl transition-all active:scale-95 group"
+                >
+                    <div className="bg-white rounded-md p-0.5 shadow-sm group-hover:shadow text-brand-600">
+                        <Plus className="h-3.5 w-3.5" />
+                    </div>
+                    <span className="text-xs font-bold uppercase tracking-wide">New</span>
+                </Link>
+
+                <Link 
+                    to="/calendar"
+                    className="p-2 text-gray-500 hover:bg-gray-100 hover:text-gray-900 rounded-xl transition-all active:scale-95"
+                    title="Universal Calendar"
+                >
+                    <CalendarDays className="h-5 w-5" />
+                </Link>
+            </div>
         )}
 
         <div className="h-6 w-px bg-gray-200 hidden sm:block"></div>
