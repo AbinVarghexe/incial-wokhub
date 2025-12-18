@@ -53,21 +53,36 @@ jobs:
             docker build -t $ECR_REPO_NAME:latest .
 
       # -----------------------------
-      # Tag Docker image
+      # Set image tag from Git SHA
       # -----------------------------
       - run:
-          name: Tag Docker image
+          name: Set image tag
           command: |
+            echo "IMAGE_TAG=${CIRCLE_SHA1:0:7}" >> $BASH_ENV
+
+      # -----------------------------
+      # Tag Docker images
+      # -----------------------------
+      - run:
+          name: Tag Docker images
+          command: |
+            docker tag \
+              $ECR_REPO_NAME:latest \
+              $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO_NAME:$IMAGE_TAG
+
             docker tag \
               $ECR_REPO_NAME:latest \
               $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO_NAME:latest
 
       # -----------------------------
-      # Push Docker image to ECR
+      # Push Docker images to ECR
       # -----------------------------
       - run:
-          name: Push Docker image to ECR
+          name: Push Docker images to ECR
           command: |
+            docker push \
+              $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO_NAME:$IMAGE_TAG
+
             docker push \
               $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$ECR_REPO_NAME:latest
 
