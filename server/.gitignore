@@ -39,3 +39,5 @@ src/main/resources/seed/
 /docs
 /src/main/resources/application-dev.yml
 /src/main/resources/env.txt
+/scripts/incial-key.pem
+/scripts/incial-prod-cheatsheet.sh
