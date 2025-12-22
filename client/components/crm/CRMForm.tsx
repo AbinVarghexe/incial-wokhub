@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { X, Save, Edit2, User, Phone, Mail, Calendar, Briefcase, FileText, Tag, DollarSign, CheckCircle, Clock, AlertCircle, History, ExternalLink, HardDrive, Linkedin, Instagram, Facebook, Twitter, Globe, Link as LinkIcon, Maximize2, Minimize2, MapPin, Hash, Building, Megaphone } from 'lucide-react';
+import { X, Save, Edit2, User, Phone, Mail, Calendar, Briefcase, FileText, Tag, DollarSign, CheckCircle, Clock, AlertCircle, History, ExternalLink, HardDrive, Linkedin, Instagram, Facebook, Twitter, Globe, Link as LinkIcon, Maximize2, Minimize2, MapPin, Hash, Building, Megaphone, Plus } from 'lucide-react';
 import { CRMEntry, SocialLinks, CRMStatus, User as UserType } from '../../types';
 import { getStatusStyles, formatDate, getFollowUpColor, formatMoney, getWorkTypeStyles, formatDateTime } from '../../utils';
 import { CustomDatePicker } from '../ui/CustomDatePicker';
@@ -34,37 +34,18 @@ const SOURCE_OPTIONS = [
     { label: 'Event', value: 'Event' },
 ];
 
-const TAG_OPTIONS = [
-  { label: 'Lead', color: 'bg-blue-100 text-blue-700 border-blue-200' },
-  { label: 'Customer', color: 'bg-green-100 text-green-700 border-green-200' },
-  { label: 'VIP', color: 'bg-purple-100 text-purple-700 border-purple-200' },
-  { label: 'Follow-up', color: 'bg-orange-100 text-orange-700 border-orange-200' },
-  { label: 'Cold', color: 'bg-gray-100 text-gray-700 border-gray-200' },
-  { label: 'Hot', color: 'bg-red-100 text-red-700 border-red-200' },
-  { label: 'Inactive', color: 'bg-stone-100 text-stone-700 border-stone-200' },
-  { label: 'Partner', color: 'bg-pink-100 text-pink-700 border-pink-200' },
-];
-
-const WORK_OPTIONS = [
-  { label: 'branding', color: 'bg-emerald-100 text-emerald-700 border-emerald-200' },
-  { label: 'poster', color: 'bg-amber-100 text-amber-800 border-amber-200' },
-  { label: 'video', color: 'bg-pink-100 text-pink-700 border-pink-200' },
-  { label: 'design', color: 'bg-purple-100 text-purple-700 border-purple-200' },
-  { label: 'ui ux', color: 'bg-sky-100 text-sky-700 border-sky-200' },
-  { label: 'shopify', color: 'bg-orange-100 text-orange-800 border-orange-200' },
-  { label: 'website', color: 'bg-red-100 text-red-700 border-red-200' },
-  { label: 'marketing', color: 'bg-gray-700 text-white border-gray-600' },
-  { label: 'Logo design', color: 'bg-gray-200 text-gray-800 border-gray-300' },
-  { label: 'software', color: 'bg-indigo-100 text-indigo-700 border-indigo-200' },
-  { label: 'consulting', color: 'bg-teal-100 text-teal-700 border-teal-200' },
-  { label: 'development', color: 'bg-cyan-100 text-cyan-700 border-cyan-200' }
-];
+const PREDEFINED_TAGS = ['Lead', 'Customer', 'VIP', 'Follow-up', 'Cold', 'Hot', 'Inactive', 'Partner'];
+const PREDEFINED_WORK = ['branding', 'poster', 'video', 'design', 'ui ux', 'shopify', 'website', 'marketing', 'software', 'consulting', 'development'];
 
 export const CRMForm: React.FC<CRMFormProps> = ({ isOpen, onClose, onSubmit, initialData }) => {
   const [formData, setFormData] = useState<Partial<CRMEntry>>({});
   const [mode, setMode] = useState<'view' | 'edit'>('edit');
   const [isNotesExpanded, setIsNotesExpanded] = useState(false);
   const [users, setUsers] = useState<UserType[]>([]);
+  
+  // Custom input states
+  const [customTag, setCustomTag] = useState('');
+  const [customWork, setCustomWork] = useState('');
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -127,6 +108,15 @@ export const CRMForm: React.FC<CRMFormProps> = ({ isOpen, onClose, onSubmit, ini
       }
   };
 
+  const addCustomTag = () => {
+      if (!customTag.trim()) return;
+      const currentTags = formData.tags || [];
+      if (!currentTags.includes(customTag.trim())) {
+          setFormData(prev => ({ ...prev, tags: [...currentTags, customTag.trim()] }));
+      }
+      setCustomTag('');
+  };
+
   const toggleWork = (workLabel: string) => {
       const currentWork = formData.work || [];
       const cleanWork = currentWork.map((w: any) => typeof w === 'object' ? w.name : w);
@@ -138,6 +128,16 @@ export const CRMForm: React.FC<CRMFormProps> = ({ isOpen, onClose, onSubmit, ini
       } else {
           setFormData(prev => ({ ...prev, work: [...cleanWork, workLabel] }));
       }
+  };
+
+  const addCustomWork = () => {
+      if (!customWork.trim()) return;
+      const currentWork = formData.work || [];
+      const cleanWork = currentWork.map((w: any) => typeof w === 'object' ? w.name : w);
+      if (!cleanWork.includes(customWork.trim())) {
+          setFormData(prev => ({ ...prev, work: [...currentWork, customWork.trim()] }));
+      }
+      setCustomWork('');
   };
 
   const updateLeadSource = (source: string) => {
@@ -412,30 +412,67 @@ export const CRMForm: React.FC<CRMFormProps> = ({ isOpen, onClose, onSubmit, ini
             </div>
             <div>
                 <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Work Type</label>
-                <div className="flex flex-wrap gap-2">
-                    {WORK_OPTIONS.map(opt => {
-                        const isSelected = formData.work?.map((w: any) => typeof w === 'object' ? w.name : w).includes(opt.label);
+                <div className="flex flex-wrap gap-2 mb-3">
+                    {PREDEFINED_WORK.map(opt => {
+                        const isSelected = (formData.work || []).map((w: any) => typeof w === 'object' ? w.name : w).includes(opt);
                         return (
-                            <button key={opt.label} type="button" onClick={() => toggleWork(opt.label)}
-                                className={`px-3 py-1.5 text-xs font-bold rounded-lg border transition-all ${isSelected ? opt.color + ' ring-2 ring-offset-1 ring-current' : 'bg-white text-gray-500 border-gray-200'}`}>
-                                {opt.label}
+                            <button key={opt} type="button" onClick={() => toggleWork(opt)}
+                                className={`px-3 py-1.5 text-[10px] font-bold rounded-lg border transition-all ${isSelected ? 'bg-emerald-100 text-emerald-700 border-emerald-200 ring-2 ring-offset-1 ring-emerald-500' : 'bg-white text-gray-500 border-gray-200'}`}>
+                                {opt}
+                            </button>
+                        );
+                    })}
+                    {(formData.work || []).filter(w => !PREDEFINED_WORK.includes(typeof w === 'object' ? w.name : w)).map(opt => {
+                        const label = typeof opt === 'object' ? opt.name : opt;
+                        return (
+                            <button key={label} type="button" onClick={() => toggleWork(label)}
+                                className="px-3 py-1.5 text-[10px] font-bold rounded-lg border bg-brand-50 text-brand-700 border-brand-200 ring-2 ring-offset-1 ring-brand-500">
+                                {label}
                             </button>
                         );
                     })}
                 </div>
+                <div className="flex gap-2">
+                    <input 
+                        type="text" 
+                        placeholder="Add custom work..." 
+                        className="flex-1 px-3 py-1.5 text-xs border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none"
+                        value={customWork}
+                        onChange={e => setCustomWork(e.target.value)}
+                        onKeyPress={e => e.key === 'Enter' && (e.preventDefault(), addCustomWork())}
+                    />
+                    <button type="button" onClick={addCustomWork} className="p-1.5 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors text-gray-600"><Plus className="h-4 w-4" /></button>
+                </div>
             </div>
             <div>
                 <label className="block text-xs font-bold text-gray-500 uppercase mb-2">Tags</label>
-                <div className="flex flex-wrap gap-2">
-                    {TAG_OPTIONS.map(opt => {
-                        const isSelected = formData.tags?.includes(opt.label);
+                <div className="flex flex-wrap gap-2 mb-3">
+                    {PREDEFINED_TAGS.map(opt => {
+                        const isSelected = formData.tags?.includes(opt);
                         return (
-                            <button key={opt.label} type="button" onClick={() => toggleTag(opt.label)}
-                                className={`px-3 py-1.5 text-xs font-bold rounded-lg border transition-all ${isSelected ? opt.color + ' ring-2 ring-offset-1 ring-current' : 'bg-white text-gray-500 border-gray-200'}`}>
-                                {opt.label}
+                            <button key={opt} type="button" onClick={() => toggleTag(opt)}
+                                className={`px-3 py-1.5 text-[10px] font-bold rounded-lg border transition-all ${isSelected ? 'bg-purple-100 text-purple-700 border-purple-200 ring-2 ring-offset-1 ring-purple-500' : 'bg-white text-gray-500 border-gray-200'}`}>
+                                {opt}
                             </button>
                         );
                     })}
+                    {(formData.tags || []).filter(t => !PREDEFINED_TAGS.includes(t)).map(opt => (
+                        <button key={opt} type="button" onClick={() => toggleTag(opt)}
+                            className="px-3 py-1.5 text-[10px] font-bold rounded-lg border bg-amber-50 text-amber-700 border-amber-200 ring-2 ring-offset-1 ring-amber-500">
+                            {opt}
+                        </button>
+                    ))}
+                </div>
+                <div className="flex gap-2">
+                    <input 
+                        type="text" 
+                        placeholder="Add custom tag..." 
+                        className="flex-1 px-3 py-1.5 text-xs border border-gray-200 rounded-lg focus:ring-2 focus:ring-brand-500 outline-none"
+                        value={customTag}
+                        onChange={e => setCustomTag(e.target.value)}
+                        onKeyPress={e => e.key === 'Enter' && (e.preventDefault(), addCustomTag())}
+                    />
+                    <button type="button" onClick={addCustomTag} className="p-1.5 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors text-gray-600"><Plus className="h-4 w-4" /></button>
                 </div>
             </div>
         </div>
