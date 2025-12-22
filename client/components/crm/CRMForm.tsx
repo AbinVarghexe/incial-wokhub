@@ -141,7 +141,6 @@ export const CRMForm: React.FC<CRMFormProps> = ({ isOpen, onClose, onSubmit, ini
   };
 
   const updateLeadSource = (source: string) => {
-      // Treating leadSources as a single value for the UI input, wrapped in array for data model
       setFormData(prev => ({ ...prev, leadSources: [source] }));
   };
 
@@ -349,37 +348,53 @@ export const CRMForm: React.FC<CRMFormProps> = ({ isOpen, onClose, onSubmit, ini
             </div>
         </div>
 
-        {/* Pipeline Info */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 bg-gray-50 p-4 rounded-xl border border-gray-200">
-            <div className="col-span-1">
-                <CustomSelect 
-                    label="Status" 
-                    value={formData.status || 'lead'} 
-                    onChange={(val) => setFormData({...formData, status: val as CRMStatus})} 
-                    options={STATUS_OPTIONS}
-                    allowCustom={true} 
-                    placeholder="Select or type..."
-                />
-            </div>
-            <div className="col-span-1">
-                <UserSelect 
-                    label="Assigned To" 
-                    value={formData.assignedTo || ''} 
-                    onChange={(val) => setFormData({...formData, assignedTo: val})} 
-                    users={users}
-                    placeholder="Unassigned"
-                />
-            </div>
-            <div className="col-span-1">
-                <label className="block text-xs font-bold text-gray-500 uppercase mb-1.5">Deal Value (₹)</label>
-                <div className="relative">
-                    <DollarSign className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
-                    <input type="number" className="w-full pl-9 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:outline-none"
-                        value={formData.dealValue || ''} onChange={e => setFormData({...formData, dealValue: parseFloat(e.target.value) || 0})} />
+        {/* Pipeline Info & Dates */}
+        <div className="bg-gray-50 p-6 rounded-2xl border border-gray-200 space-y-6">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="col-span-1">
+                    <CustomSelect 
+                        label="Status" 
+                        value={formData.status || 'lead'} 
+                        onChange={(val) => setFormData({...formData, status: val as CRMStatus})} 
+                        options={STATUS_OPTIONS}
+                        allowCustom={true} 
+                        placeholder="Select or type..."
+                    />
+                </div>
+                <div className="col-span-1">
+                    <UserSelect 
+                        label="Assigned To" 
+                        value={formData.assignedTo || ''} 
+                        onChange={(val) => setFormData({...formData, assignedTo: val})} 
+                        users={users}
+                        placeholder="Unassigned"
+                    />
+                </div>
+                <div className="col-span-1">
+                    <label className="block text-xs font-bold text-gray-500 uppercase mb-1.5">Deal Value (₹)</label>
+                    <div className="relative">
+                        <DollarSign className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                        <input type="number" className="w-full pl-9 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-500 focus:outline-none"
+                            value={formData.dealValue || ''} onChange={e => setFormData({...formData, dealValue: parseFloat(e.target.value) || 0})} />
+                    </div>
                 </div>
             </div>
-            <div className="col-span-1">
-                <CustomDatePicker label="Next Follow Up" value={formData.nextFollowUp || ''} onChange={(date) => setFormData({...formData, nextFollowUp: date})} />
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-gray-100">
+                <div className="col-span-1">
+                    <CustomDatePicker 
+                        label="Last Contact Date" 
+                        value={formData.lastContact || ''} 
+                        onChange={(date) => setFormData({...formData, lastContact: date})} 
+                    />
+                </div>
+                <div className="col-span-1">
+                    <CustomDatePicker 
+                        label="Next Follow Up" 
+                        value={formData.nextFollowUp || ''} 
+                        onChange={(date) => setFormData({...formData, nextFollowUp: date})} 
+                    />
+                </div>
             </div>
         </div>
 

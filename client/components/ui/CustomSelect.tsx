@@ -74,7 +74,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
             {allowCustom ? (
                 <input 
                     type="text"
-                    className="w-full bg-transparent border-none p-0 focus:ring-0 text-gray-700 font-bold placeholder-gray-400"
+                    className="w-full bg-transparent border-none p-0 focus:ring-0 text-gray-900 font-bold placeholder-gray-400"
                     placeholder={placeholder}
                     value={selectedOption ? selectedOption.label : value} 
                     onChange={(e) => onChange(e.target.value)}
@@ -93,12 +93,13 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
         />
       </div>
 
-      {/* Dropdown Menu - Increased Z-index and animation */}
+      {/* Dropdown Menu - Boosted Z-index to z-[1000] for absolute modal priority */}
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-100 rounded-xl shadow-2xl z-[100] overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200 origin-top min-w-[180px] ring-1 ring-black/5">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-gray-100 rounded-xl shadow-2xl z-[1000] overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200 origin-top min-w-[180px] ring-1 ring-black/5">
           <div className="max-h-64 overflow-y-auto no-scrollbar p-1.5 space-y-0.5">
             {options.length > 0 ? (
-                options.filter(opt => (allowCustom && value) ? opt.label.toLowerCase().includes(value.toLowerCase()) : true).map((option) => (
+                // Removed the (allowCustom && value) filter that was hiding valid options
+                options.map((option) => (
                 <button
                     key={option.value}
                     type="button"
@@ -121,13 +122,7 @@ export const CustomSelect: React.FC<CustomSelectProps> = ({
                 </button>
                 ))
             ) : (
-                <div className="px-3 py-4 text-xs text-gray-400 text-center italic">No options available</div>
-            )}
-            
-            {allowCustom && value && !options.some(o => o.value === value || o.label === value) && (
-                 <div className="px-3 py-2 text-[10px] text-brand-600 font-black uppercase tracking-widest border-t border-gray-50 mt-1 bg-brand-50/30">
-                    Custom: "{value}"
-                 </div>
+                <div className="px-3 py-4 text-xs text-gray-400 text-center italic font-bold uppercase tracking-widest">No options</div>
             )}
           </div>
         </div>
