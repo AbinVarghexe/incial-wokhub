@@ -73,6 +73,7 @@ export interface CRMEntry {
   email: string;
   contactName: string;
   assignedTo: string;
+  assigneeId?: number; // Linked User ID
   address?: string; 
   companyImageUrl?: string; 
   lastContact: string; 
@@ -117,6 +118,7 @@ export interface Task {
   priority: TaskPriority;
   taskType?: TaskType; 
   assignedTo: string; 
+  assigneeId?: number; // Linked User ID
   dueDate: string; 
   attachments?: string[]; 
   taskLink?: string; 
@@ -144,6 +146,7 @@ export interface Meeting {
   notes?: string;
   companyId?: number; 
   assignedTo?: string;
+  assigneeId?: number; // Linked User ID
   createdAt: string;
   lastUpdatedBy?: string;
   lastUpdatedAt?: string;

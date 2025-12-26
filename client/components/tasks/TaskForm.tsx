@@ -40,6 +40,7 @@ export const TaskForm: React.FC<TaskFormProps> = ({ isOpen, onClose, onSubmit, i
                 priority: 'Medium', 
                 taskType: 'General',
                 assignedTo: 'Unassigned',
+                assigneeId: undefined,
                 dueDate: new Date().toISOString().split('T')[0],
                 taskLink: '',
                 companyId: undefined // Enforce internal by default
@@ -50,6 +51,10 @@ export const TaskForm: React.FC<TaskFormProps> = ({ isOpen, onClose, onSubmit, i
   }, [isOpen, initialData]);
 
   if (!isOpen) return null;
+
+  const handleUserChange = (userId: number, userName: string) => {
+      setFormData(prev => ({ ...prev, assigneeId: userId, assignedTo: userName }));
+  };
 
   return (
     <>
@@ -180,7 +185,12 @@ export const TaskForm: React.FC<TaskFormProps> = ({ isOpen, onClose, onSubmit, i
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <CustomSelect label="Execution Status" value={formData.status || ''} onChange={(val) => setFormData({...formData, status: val as TaskStatus})} options={STATUSES.map(s => ({ label: s, value: s }))} />
-                        <UserSelect label="Node Assignee" value={formData.assignedTo || 'Unassigned'} onChange={(val) => setFormData({...formData, assignedTo: val})} users={users} />
+                        <UserSelect 
+                            label="Node Assignee" 
+                            value={formData.assigneeId || formData.assignedTo || 'Unassigned'} 
+                            onChange={handleUserChange} 
+                            users={users} 
+                        />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

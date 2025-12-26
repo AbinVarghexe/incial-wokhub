@@ -71,7 +71,7 @@ export const CRMForm: React.FC<CRMFormProps> = ({ isOpen, onClose, onSubmit, ini
         } else {
             const todayStr = new Date().toISOString().split('T')[0];
             setFormData({
-                company: '', contactName: '', email: '', phone: '', status: 'lead', assignedTo: '',
+                company: '', contactName: '', email: '', phone: '', status: 'lead', assignedTo: '', assigneeId: undefined,
                 dealValue: 0, tags: [], work: [], leadSources: [], driveLink: '', address: '',
                 referenceId: '', companyImageUrl: '', socials: { website: '', linkedin: '', instagram: '', facebook: '' },
                 lastContact: todayStr, nextFollowUp: todayStr, notes: '',
@@ -125,6 +125,10 @@ export const CRMForm: React.FC<CRMFormProps> = ({ isOpen, onClose, onSubmit, ini
           setFormData(prev => ({ ...prev, work: [...currentWork, val] }));
       }
       setCustomWork('');
+  };
+
+  const handleUserChange = (userId: number, userName: string) => {
+      setFormData(prev => ({ ...prev, assigneeId: userId, assignedTo: userName }));
   };
 
   const renderView = () => (
@@ -327,7 +331,7 @@ export const CRMForm: React.FC<CRMFormProps> = ({ isOpen, onClose, onSubmit, ini
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 p-6 md:p-8 bg-slate-50/50 rounded-[2rem] md:rounded-[2.5rem] border border-slate-100 shadow-inner">
             <CustomSelect label="Pipeline Stage" value={formData.status || 'lead'} onChange={(val) => setFormData({...formData, status: val as CRMStatus})} options={STATUS_OPTIONS} />
-            <UserSelect label="Node Assignee" value={formData.assignedTo || ''} onChange={(val) => setFormData({...formData, assignedTo: val})} users={users} />
+            <UserSelect label="Node Assignee" value={formData.assigneeId || formData.assignedTo || 'Unassigned'} onChange={handleUserChange} users={users} />
             <div>
                 <label className="block text-[10px] font-black text-slate-400 uppercase tracking-widest mb-2 ml-1">Valuation (₹)</label>
                 <div className="relative">
