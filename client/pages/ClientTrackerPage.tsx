@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Navbar } from '../components/layout/Navbar';
@@ -8,7 +9,7 @@ import { getStatusStyles } from '../utils';
 import { useLayout } from '../context/LayoutContext';
 import { PremiumLogo } from '../components/ui/PremiumLogo';
 
-type SortKey = 'company' | 'progress' | 'status' | 'completed';
+type SortKey = 'company' | 'progress' | 'status' | 'completed' | 'total';
 type SortDirection = 'asc' | 'desc';
 
 export const ClientTrackerPage: React.FC = () => {
@@ -18,8 +19,8 @@ export const ClientTrackerPage: React.FC = () => {
   const [search, setSearch] = useState('');
   const [isLoading, setIsLoading] = useState(true);
   const [sortConfig, setSortConfig] = useState<{ key: SortKey; direction: SortDirection }>({
-    key: 'company',
-    direction: 'asc'
+    key: 'total',
+    direction: 'desc'
   });
 
   useEffect(() => {
@@ -66,6 +67,7 @@ export const ClientTrackerPage: React.FC = () => {
             case 'progress': return direction * (a.progress - b.progress);
             case 'status': return direction * a.status.localeCompare(b.status);
             case 'completed': return direction * (a.completed - b.completed);
+            case 'total': return direction * (a.total - b.total);
             default: return 0;
         }
     });
@@ -89,12 +91,12 @@ export const ClientTrackerPage: React.FC = () => {
            
            {/* High-Impact Header */}
            <div className="flex flex-col xl:flex-row justify-between items-start xl:items-end gap-6 lg:gap-10 mb-10 lg:mb-16 animate-premium">
-             <div>
+             <div className="w-full xl:w-auto">
                 <div className="flex items-center gap-3 mb-2 lg:mb-4">
                      <div className="h-2 w-2 rounded-full bg-brand-500 animate-pulse" />
                      <span className="text-[9px] lg:text-[10px] font-black text-brand-600 uppercase tracking-[0.4em]">Operations Center</span>
                 </div>
-                <h1 className="text-4xl lg:text-7xl font-black text-slate-900 tracking-tighter leading-none display-text">Tracker.</h1>
+                <h1 className="text-4xl sm:text-5xl lg:text-7xl font-black text-slate-900 tracking-tighter leading-none display-text">Tracker.</h1>
                 <p className="text-slate-500 text-sm lg:text-lg mt-4 lg:mt-6 font-medium max-w-xl leading-relaxed">
                     Visualizing execution velocity and roadmap synchronization across all project nodes.
                 </p>
@@ -128,7 +130,7 @@ export const ClientTrackerPage: React.FC = () => {
            </div>
 
            {/* Premium Registry Table */}
-           <div className="bg-white/30 backdrop-blur-3xl rounded-[2rem] lg:rounded-[3.5rem] border border-white/60 shadow-2xl overflow-hidden flex flex-col relative">
+           <div className="bg-white/30 backdrop-blur-3xl rounded-[2rem] lg:rounded-[3.5rem] border border-white/60 shadow-2xl overflow-hidden flex flex-col relative w-full">
                 {/* Decorative background blur for table area */}
                 <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-b from-white/30 to-transparent pointer-events-none z-10" />
 
@@ -136,7 +138,8 @@ export const ClientTrackerPage: React.FC = () => {
                     <table className="w-full text-left border-collapse whitespace-nowrap min-w-[1000px]">
                         <thead className="z-30">
                             <tr>
-                                <th className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl px-8 lg:px-12 py-6 left-0 border-b border-white/50 text-left shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
+                                {/* Note: Sticky on left only for Large screens (lg:) to avoid blocking mobile view */}
+                                <th className="relative lg:sticky top-0 z-40 bg-white/80 backdrop-blur-xl px-6 lg:px-12 py-6 lg:left-0 border-b border-white/50 text-left shadow-[4px_0_24px_rgba(0,0,0,0.02)]">
                                     <button onClick={() => handleSort('company')} className="flex items-center gap-2 text-[9px] lg:text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] group hover:text-indigo-600 outline-none transition-colors">
                                         Project Identity <SortIcon column="company" />
                                     </button>
@@ -152,8 +155,8 @@ export const ClientTrackerPage: React.FC = () => {
                                     </button>
                                 </th>
                                 <th className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl px-6 lg:px-8 py-6 border-b border-white/50 text-[9px] lg:text-[10px] font-black text-slate-400 uppercase tracking-[0.3em]">
-                                    <button onClick={() => handleSort('completed')} className="flex items-center gap-2 group outline-none hover:text-indigo-600 transition-colors">
-                                        Roadmap Progress <SortIcon column="completed" />
+                                    <button onClick={() => handleSort('total')} className="flex items-center gap-2 group outline-none hover:text-indigo-600 transition-colors">
+                                        Roadmap Progress <SortIcon column="total" />
                                     </button>
                                 </th>
                                 <th className="sticky top-0 z-30 bg-white/80 backdrop-blur-xl px-6 lg:px-10 py-6 border-b border-white/50 text-right"></th>
@@ -172,20 +175,21 @@ export const ClientTrackerPage: React.FC = () => {
                                     onClick={() => navigate(`/client-tracker/${client.id}`)}
                                     className="group transition-all duration-500 cursor-pointer hover:bg-white/40"
                                 >
-                                    <td className="px-8 lg:px-12 py-6 sticky left-0 group-hover:bg-white/90 transition-colors z-20 shadow-[4px_0_24px_rgba(0,0,0,0.02)] border-r border-transparent group-hover:border-white/50 rounded-r-[2rem]">
-                                        <div className="flex items-center gap-6">
+                                    {/* Note: Sticky on left only for Large screens (lg:) */}
+                                    <td className="px-6 lg:px-12 py-6 relative lg:sticky lg:left-0 group-hover:bg-white/90 transition-colors z-20 lg:shadow-[4px_0_24px_rgba(0,0,0,0.02)] border-r border-transparent group-hover:border-white/50 rounded-r-[2rem]">
+                                        <div className="flex items-center gap-4 lg:gap-6">
                                             <div className="relative">
                                                 <PremiumLogo 
                                                     src={client.companyImageUrl} 
                                                     alt={client.company} 
                                                     fallback={<Building className="h-6 w-6 text-slate-300" />}
-                                                    containerClassName="h-16 w-16 bg-white rounded-[1.2rem] border border-white shadow-xl flex-shrink-0 flex items-center justify-center overflow-hidden transition-all duration-500 group-hover:scale-110 group-hover:shadow-2xl"
+                                                    containerClassName="h-12 w-12 lg:h-16 lg:w-16 bg-white rounded-[1.2rem] border border-white shadow-xl flex-shrink-0 flex items-center justify-center overflow-hidden transition-all duration-500 group-hover:scale-110 group-hover:shadow-2xl"
                                                 />
-                                                <div className="absolute -bottom-1 -right-1 h-4 w-4 bg-emerald-500 border-2 border-white rounded-full shadow-lg" />
+                                                <div className="absolute -bottom-1 -right-1 h-3 w-3 lg:h-4 lg:w-4 bg-emerald-500 border-2 border-white rounded-full shadow-lg" />
                                             </div>
                                             <div className="min-w-0">
                                                 <div className="flex items-center gap-2 mb-1">
-                                                    <p className="font-black text-slate-900 text-lg group-hover:text-indigo-600 transition-colors tracking-tight truncate max-w-[200px] leading-none">
+                                                    <p className="font-black text-slate-900 text-base lg:text-lg group-hover:text-indigo-600 transition-colors tracking-tight truncate max-w-[150px] lg:max-w-[200px] leading-none">
                                                         {client.company}
                                                     </p>
                                                     <ArrowUpRight className="h-3 w-3 text-slate-300 group-hover:text-indigo-400 transition-colors opacity-0 group-hover:opacity-100" />
@@ -223,7 +227,7 @@ export const ClientTrackerPage: React.FC = () => {
                                     <td className="px-6 lg:px-8 py-6 align-middle">
                                         <div className="flex items-center gap-5">
                                             <div className="p-3 bg-white rounded-2xl shadow-sm border border-slate-100 group-hover:border-indigo-100 group-hover:shadow-md transition-all">
-                                                <Activity className={`h-5 w-5 ${sortConfig.key === 'completed' ? 'text-indigo-500' : 'text-slate-300 group-hover:text-indigo-400'}`} />
+                                                <Activity className={`h-5 w-5 ${sortConfig.key === 'total' ? 'text-indigo-500' : 'text-slate-300 group-hover:text-indigo-400'}`} />
                                             </div>
                                             <div>
                                                 <span className="text-xl font-black text-slate-900 leading-none block mb-1">{client.completed} <span className="text-slate-300">/</span> {client.total}</span>

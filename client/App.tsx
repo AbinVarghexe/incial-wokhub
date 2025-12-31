@@ -22,6 +22,7 @@ import { ProfilePage } from './pages/ProfilePage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { UnauthorizedPage } from './pages/UnauthorizedPage';
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage';
+import { Screensaver } from './components/ui/Screensaver';
 
 // --- Session Monitor Component ---
 const SessionMonitor: React.FC = () => {
@@ -231,12 +232,6 @@ const AppRoutes = () => {
                         <ClientDetailsPage />
                     </OperationalRoute>
                 } />               
-                <Route path="/settings" element={
-                    <OperationalRoute>
-                        <SettingsPage />
-                    </OperationalRoute>
-                } />
-                
                 {/* Focus Break Game */}
                 <Route path="/break" element={
                     <OperationalRoute>

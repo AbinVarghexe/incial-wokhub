@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { CRMEntry, CRMStatus } from '../../types';
 import { getStatusStyles, getWorkTypeStyles } from '../../utils';
@@ -29,7 +30,7 @@ const CompanyStatusDropdown = ({ company, onStatusChange }: { company: CRMEntry;
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
             if (isOpen && triggerRef.current && !triggerRef.current.contains(event.target as Node)) {
-                const portal = document.getElementById('company-status-portal');
+                const portal = document.getElementById(`company-status-portal-${company.id}`);
                 if (portal && portal.contains(event.target as Node)) {
                     return;
                 }
@@ -48,7 +49,7 @@ const CompanyStatusDropdown = ({ company, onStatusChange }: { company: CRMEntry;
             window.removeEventListener('resize', updateCoords);
             document.removeEventListener('mousedown', handleClickOutside);
         };
-    }, [isOpen]);
+    }, [isOpen, company.id]);
 
     const formatStatus = (s: string) => {
         if (s === 'Quote Sent') return 'Quote Sent';
@@ -57,7 +58,7 @@ const CompanyStatusDropdown = ({ company, onStatusChange }: { company: CRMEntry;
 
     const menuContent = isOpen && (
         <div 
-            id="company-status-portal"
+            id={`company-status-portal-${company.id}`}
             className="fixed z-[9999] mt-2 w-40 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden animate-in fade-in slide-in-from-top-1 duration-200"
             style={{ top: coords.top, left: coords.left }}
         >
